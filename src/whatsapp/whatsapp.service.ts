@@ -5,8 +5,12 @@ import { WhatsappHelper } from './whatsapp.helper';
 export class WhatsappService {
   constructor(private readonly whatsappHelper: WhatsappHelper) {}
 
-  handleMessageFrom(phoneNumberId: string, { from, msg }) {
-    const data = { /*type: 'text',*/ to: from, text: { body: 'vika' + msg } };
-    this.whatsappHelper.send(data, { phoneNumberId });
+  handleMessageFrom(phoneNumberId: string, { messageId, from, message }) {
+    const msg = this.whatsappHelper.textMessageFrom({
+      to: from,
+      text: 'ack ' + message,
+      replyingMessageId: messageId,
+    });
+    this.whatsappHelper.send(msg, { phoneNumberId });
   }
 }

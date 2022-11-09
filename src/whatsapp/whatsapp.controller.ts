@@ -31,10 +31,17 @@ export class WhatsappController {
       ) {
         const phoneNumberId =
           req.body.entry[0].changes[0].value.metadata.phone_number_id;
-        const from = req.body.entry[0].changes[0].value.messages[0].from;
-        const msg = req.body.entry[0].changes[0].value.messages[0].text.body; // extract the message text from the webhook payload
-        console.log(phoneNumberId);
-        this.whatsappService.handleMessageFrom(phoneNumberId, { from, msg });
+        const messageId: string =
+          req.body.entry[0].changes[0].value.messages[0].id;
+        const from: string =
+          req.body.entry[0].changes[0].value.messages[0].from;
+        const message: any =
+          req.body.entry[0].changes[0].value.messages[0].text.body; // extract the message text from the webhook payload
+        this.whatsappService.handleMessageFrom(phoneNumberId, {
+          messageId,
+          from,
+          message,
+        });
       }
 
       return 'EVENT_RECEIVED';
