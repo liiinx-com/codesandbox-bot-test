@@ -1,7 +1,7 @@
 import { HttpService, Injectable } from '@nestjs/common';
 
 const TOKEN =
-  'EAAPYZCJH2zBwBAMP8QoK21HewWfVB0osheLKRY58LR03zDKHiUvhwLw0W48sfhYEfLebcHV3bs2HhXNJk8wKZA5ZAA8RcwDITHpgPsFOCp2wCWvtA2SADrhXU43BgcRtXezxE27nE7IbcA5dmZAL4jDK0UpvU6wWCc4JtRdYfAxvfCMd5BZBoYEP9KW3LOhGhtkZAKfZAmbOgI5GCytfIrK';
+  'EAAPYZCJH2zBwBAIH1d4iWkarlkLNw6PrsUvgSaE4MdPb0AZBK8j47qeZBJuZB7IJNMXZCveGuLdVYR5ZApb2zBSoq3ZBmRWf4yNIzdZB2YT5Us0PVgMasB9jUj3WBcuOUhkEBc7o8XmcXRsAIY8uDesDR4eZBeJp6u7dQBZAir9j9Pi75xLIPROYbiLfoo30ckSNl7TkeM8vYY3p1MY4ZCZBAabH';
 
 @Injectable()
 export class WhatsappHelper {
@@ -18,6 +18,11 @@ export class WhatsappHelper {
     };
   }
 
+  cleanMessage(message: string) {
+    const parts = message.split(' ');
+    return parts.map((m: string) => m.toLocaleLowerCase()).join('-');
+  }
+
   textMessageFrom({ to, text, replyingMessageId = null, previewUrl = false }) {
     const result: any = {
       type: 'text',
@@ -29,16 +34,16 @@ export class WhatsappHelper {
   }
 
   async send(data: object, { phoneNumberId, recipient_type = 'individual' }) {
-    const updatedData = {
+    const updatedPayload = {
       ...data,
       recipient_type,
       messaging_product: 'whatsapp',
     };
 
-    console.log('sending => ', JSON.stringify(updatedData, null, 2));
+    console.log('sending => ', JSON.stringify(updatedPayload, null, 2));
     const headers = this.getHeaders();
     return this.http
-      .post(this.getUrl({ phoneNumberId }), updatedData, { headers })
+      .post(this.getUrl({ phoneNumberId }), updatedPayload, { headers })
       .toPromise();
   }
 }
